@@ -1,16 +1,38 @@
-import type { NextPage } from 'next'
-import Image from 'next/image'
+import type { NextPage } from 'next';
+import Image from 'next/image';
+import {useRef, useEffect} from 'react';
+import {MainCanvas} from '../mainCanvas/maincanvas';
 
 const Home: NextPage = () => {
+
+  const mainCanvasRef = useRef<HTMLCanvasElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (mainCanvasRef.current && mainRef.current) {
+      const mainCanvas: HTMLCanvasElement = mainCanvasRef.current;
+      const ctx = mainCanvas.getContext('2d');
+
+      const main: HTMLElement = mainRef.current;
+      window.onload = () => {
+        if (ctx) {
+          new MainCanvas(mainCanvas, ctx, main);
+        }
+      }
+    }
+  }, [mainCanvasRef.current])
+
+
   return (
     <div>
       <header>
         <nav></nav>
       </header>
 
-      <main className="w-[100vw] h-[100vh] flex flex-col items-center justify-center">
-        <h1 className="text-7xl">Thinking about clients</h1>
-        <p className="text-2xl mt-3">사용자의 더 나은 웹 경험을 생각하며 개발합니다.</p>
+      <main className="relative w-[100vw] h-[100vh] flex flex-col items-center justify-center" ref={mainRef}>
+        <canvas className="absolute w-full h-full" ref={mainCanvasRef}></canvas>
+        <h1 className="text-7xl z-10">Thinking about clients</h1>
+        <p className="text-2xl mt-3 z-10">사용자의 더 나은 웹 경험을 생각합니다.</p>
       </main>
 
       <section
